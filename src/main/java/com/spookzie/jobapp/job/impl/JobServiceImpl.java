@@ -1,38 +1,35 @@
 package com.spookzie.jobapp.job.impl;
 
 import com.spookzie.jobapp.job.Job;
+import com.spookzie.jobapp.job.JobRepository;
 import com.spookzie.jobapp.job.JobService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class JobServiceImpl implements JobService
 {
-    private final List<Job> jobs = new ArrayList<>();
-    private Long nextId = 1L;
+    private final JobRepository jobRepo;
 
 
     /*  GET     */
     @Override
     public List<Job> findAll()
     {
-        return this.jobs;
+        return this.jobRepo.findAll();
     }
 
     @Override
     public Job findById(Long id)
     {
-        for(Job job : jobs)
-        {
-            if(job.getId().equals(id))
-                return job;
-        }
-
-        return null;
+        return this.jobRepo.findById(id)
+                .orElse(null);
     }
 
 
@@ -40,8 +37,8 @@ public class JobServiceImpl implements JobService
     @Override
     public void createJob(Job job)
     {
-        job.setId(this.nextId++);
-        this.jobs.add(job);
+        job.setId(null);
+        this.jobRepo.save(job);
     }
 
 
@@ -49,27 +46,36 @@ public class JobServiceImpl implements JobService
     @Override
     public boolean deleteById(Long id)
     {
-        return this.jobs.remove(
-                this.findById(id)
-        );
+        try {
+            this.jobRepo.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 
     /*  UPDATE  */
     @Override
+    @Transactional
     public Job updateJob(Long id, Job job)
     {
-        Job existingJob = this.findById(id);
+        Optional<Job> jobOptional = this.jobRepo.findById(id);
 
-        if(existingJob != null)
+        if(jobOptional.isPresent())
         {
+            Job existingJob = jobOptional.get();
+
             existingJob.setTitle(job.getTitle());
             existingJob.setDescription(job.getDescription());
             existingJob.setMinSalary(job.getMinSalary());
             existingJob.setMaxSalary(job.getMaxSalary());
             existingJob.setLocation(job.getLocation());
+
+            this.jobRepo.save(existingJob);
+            return existingJob;
         }
 
-        return existingJob;
+        return null;
     }
 }

@@ -1,7 +1,5 @@
 package com.spookzie.jobapp.job;
 
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 
