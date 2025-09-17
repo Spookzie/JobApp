@@ -1,5 +1,6 @@
 package com.spookzie.jobapp.job;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,20 +8,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@RequestMapping("/jobs")
 @RestController
+@RequestMapping("/jobs")
+@RequiredArgsConstructor
 public class JobController
 {
     private final JobService jobService;
 
-    public JobController(JobService jobService)
-    {
-        this.jobService = jobService;
-    }
-
 
     /*  GET     */
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<Job>> findAll()
     {
         return new ResponseEntity<>(
@@ -42,7 +39,7 @@ public class JobController
 
 
     /*  POST    */
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<String> createJob(@RequestBody Job job)
     {
         this.jobService.createJob(job);
