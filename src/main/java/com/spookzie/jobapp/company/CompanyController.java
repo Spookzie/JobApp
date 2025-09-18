@@ -30,12 +30,9 @@ public class CompanyController
     @GetMapping("/{id}")
     public ResponseEntity<Company> findById(@PathVariable Long id)
     {
-        Optional<Company> companyFound = this.companyService.findById(id);
-        return companyFound.map(
-                company -> new ResponseEntity<>(
-                        company, HttpStatus.OK)
-        ).orElseGet(
-                () -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND)
+        return new ResponseEntity<>(
+                this.companyService.findById(id),
+                HttpStatus.OK
         );
     }
 

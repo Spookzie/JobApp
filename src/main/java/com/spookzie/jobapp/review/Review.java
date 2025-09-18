@@ -1,36 +1,31 @@
-package com.spookzie.jobapp.company;
+package com.spookzie.jobapp.review;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.spookzie.jobapp.job.Job;
-import com.spookzie.jobapp.review.Review;
+import com.spookzie.jobapp.company.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 
 @Entity
-@Table(name = "companies")
+@Table(name = "reviews")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Company
+public class Review
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String title;
     private String description;
+    private double rating;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "company")
-    private List<Job> jobs;
-
-    @OneToMany(mappedBy = "company")
-    private List<Review> reviews;
+    @ManyToOne
+    private Company company;
 }

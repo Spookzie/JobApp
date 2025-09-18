@@ -26,9 +26,9 @@ public class CompanyServiceImpl implements CompanyService
     }
 
     @Override
-    public Optional<Company> findById(Long id)
+    public Company findById(Long id)
     {
-        return this.companyRepo.findById(id);
+        return this.companyRepo.findById(id).orElse(null);
     }
 
     /*  POST    */
